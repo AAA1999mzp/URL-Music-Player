@@ -8,10 +8,10 @@ class AudioPlayerController extends GetxController {
   var currentPosition = Duration.zero.obs;
   var totalDuration = Duration.zero.obs;
 
-  // List of audio URLs and names
+  // List of audio URLs, names, and artists
   final List<String> playlist = <String>[].obs;
   final List<String> playlistNames = <String>[].obs;
-  final List<String> trackDurations = <String>[].obs;
+  final List<String> playlistArtists = <String>[].obs;
 
   @override
   void onInit() {
@@ -30,39 +30,19 @@ class AudioPlayerController extends GetxController {
     });
   }
 
-  void addTrackWithName(String name, String url) async {
+  void addTrackWithNameAndArtist(String name, String artist, String url) async {
     playlist.add(url);
     playlistNames.add(name);
-
-    try {
-      Duration? duration = await player.setUrl(url);
-      String durationString = duration != null
-          ? "${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}"
-          : "Unknown";
-      trackDurations.add(durationString);
-    } catch (e) {
-      trackDurations.add("Error");
-      print("Error loading track duration: $e");
-    }
+    playlistArtists.add(artist);
 
     setPlaylist();
   }
 
-  void updateTrack(int index, String name, String url) async {
+  void updateTrack(int index, String name, String artist, String url) async {
     if (index < playlist.length) {
       playlist[index] = url;
       playlistNames[index] = name;
-
-      try {
-        Duration? duration = await player.setUrl(url);
-        String durationString = duration != null
-            ? "${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}"
-            : "Unknown";
-        trackDurations[index] = durationString;
-      } catch (e) {
-        trackDurations[index] = "Error";
-        print("Error loading track duration: $e");
-      }
+      playlistArtists[index] = artist;
 
       setPlaylist();
     }

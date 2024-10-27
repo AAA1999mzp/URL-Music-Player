@@ -5,6 +5,7 @@ import '../widgets/navigation_bar.dart';
 
 class AddTrackView extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController artistController = TextEditingController();
   final TextEditingController urlController = TextEditingController();
   final AudioPlayerController controller = Get.find();
 
@@ -23,14 +24,18 @@ class AddTrackView extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Track Name'),
             ),
             TextField(
+              controller: artistController,
+              decoration: InputDecoration(labelText: 'Artist'),
+            ),
+            TextField(
               controller: urlController,
               decoration: InputDecoration(labelText: 'Track URL'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (nameController.text.isNotEmpty && urlController.text.isNotEmpty) {
-                  controller.addTrackWithName(nameController.text, urlController.text);
+                if (nameController.text.isNotEmpty && artistController.text.isNotEmpty && urlController.text.isNotEmpty) {
+                  controller.addTrackWithNameAndArtist(nameController.text, artistController.text, urlController.text);
                   Get.back();
                 }
               },
@@ -43,11 +48,12 @@ class AddTrackView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(controller.playlistNames[index]),
-                      subtitle: Text(controller.playlist[index]),
+                      subtitle: Text(controller.playlistArtists[index]),
                       trailing: IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () {
                           nameController.text = controller.playlistNames[index];
+                          artistController.text = controller.playlistArtists[index];
                           urlController.text = controller.playlist[index];
                           showDialog(
                             context: context,
@@ -61,6 +67,10 @@ class AddTrackView extends StatelessWidget {
                                     decoration: InputDecoration(labelText: 'Track Name'),
                                   ),
                                   TextField(
+                                    controller: artistController,
+                                    decoration: InputDecoration(labelText: 'Artist'),
+                                  ),
+                                  TextField(
                                     controller: urlController,
                                     decoration: InputDecoration(labelText: 'Track URL'),
                                   ),
@@ -69,7 +79,7 @@ class AddTrackView extends StatelessWidget {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    controller.updateTrack(index, nameController.text, urlController.text);
+                                    controller.updateTrack(index, nameController.text, artistController.text, urlController.text);
                                     Get.back();
                                   },
                                   child: Text('Update'),

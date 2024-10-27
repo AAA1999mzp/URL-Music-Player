@@ -21,15 +21,19 @@ class PlayerView extends StatelessWidget {
                       controller.currentIndex.value < controller.playlistNames.length
                   ? controller.playlistNames[controller.currentIndex.value]
                   : 'No Track Playing';
-              final currentTrackDuration = controller.trackDurations.isNotEmpty &&
-                      controller.currentIndex.value < controller.trackDurations.length
-                  ? controller.trackDurations[controller.currentIndex.value]
+              final currentTrackArtist = controller.playlistArtists.isNotEmpty &&
+                      controller.currentIndex.value < controller.playlistArtists.length
+                  ? controller.playlistArtists[controller.currentIndex.value]
                   : '';
               return Column(
                 children: [
                   Text(
-                    'Playing: $currentTrackName ($currentTrackDuration)',
+                    'Playing: $currentTrackName',
                     style: TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    'Artist: $currentTrackArtist',
+                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                   ),
                   Slider(
                     value: controller.currentPosition.value.inSeconds.toDouble(),
@@ -78,8 +82,8 @@ class PlayerView extends StatelessWidget {
                   itemCount: controller.playlist.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(controller.playlistNames.length > index ? controller.playlistNames[index] : "Unknown"),
-                      subtitle: Text('${controller.playlist[index]} (${controller.trackDurations.length > index ? controller.trackDurations[index] : "Unknown"})'),
+                      title: Text(controller.playlistNames[index]),
+                      subtitle: Text(controller.playlistArtists[index]),
                       onTap: () => controller.playTrackFromUrl(controller.playlist[index]),
                     );
                   },
